@@ -56,6 +56,7 @@
 #include "networkmenu.h"
 #include <time.h>
 #include <QElapsedTimer>
+#include <QtZlib/zlib.h>
 
 class Exchange;
 
@@ -85,6 +86,15 @@ public:
     QStringList getRuleGroupsNames();
     QStringList getScriptGroupsNames();
     int getOpenOrdersCount(int all=0);
+    int getOpenOrderType(int item);
+    int getOpenOrderPrice(int item);
+    int getOpenOrderVolume(int item);
+
+    int getHistoryOrdersCount(int all=0);
+    int getHistoryOrderType(int item);
+    int getHistoryOrderPrice(int item);
+    int getHistoryOrderVolume(int item);
+
 	void fixTableViews(QWidget *wid);
     double getIndicatorValue(QString);
     QMap<QString,QDoubleSpinBox*> indicatorsMap;
@@ -124,6 +134,7 @@ public:
 	~QtBitcoinTrader();
 
 	OrdersModel *ordersModel;
+    HistoryModel *historyModel;
 
 	quint32 currencyChangedDate;
 
@@ -174,7 +185,7 @@ private:
 	DepthModel *depthAsksModel;
 	DepthModel *depthBidsModel;
 	TradesModel *tradesModel;
-	HistoryModel *historyModel;
+
 	void clearDepth();
 	void calcOrdersTotalValues();
 	void ruleTotalToBuyValueChanged();

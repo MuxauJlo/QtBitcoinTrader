@@ -64,7 +64,7 @@
 #include "addrulegroup.h"
 #include "percentpicker.h"
 #include "logobutton.h"
-#include <QSound>
+#include <QtMultimedia/QSound>
 #include "scriptwidget.h"
 #include "thisfeatureunderdevelopment.h"
 #include "orderstablecancelbutton.h"
@@ -161,7 +161,7 @@ QtBitcoinTrader::QtBitcoinTrader()
 
 	windowWidget->setWindowFlags(Qt::Window);
 
-	ui.ordersTableFrame->setVisible(false);
+    ui.ordersTableFrame->setVisible(false);
 
 	currentlyAddingOrders=false;
 	ordersModel=new OrdersModel;
@@ -572,8 +572,8 @@ void QtBitcoinTrader::setupClass()
 	}
 	baseValues.restSign.clear();
 
-	currentExchange->setupApi(this,false);
-	setApiDown(false);
+    currentExchange->setupApi(this,false); //Tarasov
+    setApiDown(false);
 
 	if(!currentExchange->exchangeTickerSupportsHiLowPrices)
 		for(int n=0;n<ui.highLowLayout->count();n++)
@@ -822,6 +822,43 @@ int QtBitcoinTrader::getOpenOrdersCount(int all)//-1: asks, 0 all, 1: bids
     if(all==-1)return ordersModel->getAsksCount();
     return ordersModel->rowCount()-ordersModel->getAsksCount();
 }
+
+int QtBitcoinTrader::getOpenOrderType(int item)//-1: asks, 0 all, 1: bids
+{
+    return ordersModel->getRowType(item);
+}
+
+int QtBitcoinTrader::getOpenOrderPrice(int item)
+{
+    return ordersModel->getRowPrice(item);
+}
+int QtBitcoinTrader::getOpenOrderVolume(int item)
+{
+    return ordersModel->getRowVolume(item);
+}
+
+int QtBitcoinTrader::getHistoryOrdersCount(int all)//-1: asks, 0 all, 1: bids
+{
+    if(all==0)return historyModel->rowCount();
+    if(all==-1)return historyModel->getAsksCount();
+    return historyModel->rowCount()-historyModel->getAsksCount();
+}
+
+int QtBitcoinTrader::getHistoryOrderType(int item)
+{
+    return historyModel->getRowType(item);
+}
+
+int QtBitcoinTrader::getHistoryOrderPrice(int item)
+{
+    return historyModel->getRowPrice(item);
+}
+
+int QtBitcoinTrader::getHistoryOrderVolume(int item)
+{
+    return historyModel->getRowVolume(item);
+}
+
 
 void QtBitcoinTrader::repeatSelectedOrderByType(int type, bool availableOnly)
 {

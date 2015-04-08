@@ -135,6 +135,16 @@ public slots:
     int getOpenAsksCount();
     int getOpenBidsCount();
     int getOpenOrdersCount();
+    int getOpenOrderType(int item);
+    int getOpenOrderPrice(int item);
+    int getOpenOrderVolume(int item);
+
+    int getHistoryAsksCount();
+    int getHistoryBidsCount();
+    int getHistoryOrdersCount();
+    int getHistoryOrderType(int item);
+    int getHistoryOrderPrice(int item);
+    int getHistoryOrderVolume(int item);
 
     double getAsksVolByPrice(double price);
     double getAsksPriceByVol(double volume);

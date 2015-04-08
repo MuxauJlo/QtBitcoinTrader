@@ -105,6 +105,17 @@ void HistoryModel::historyChanged(QList<HistoryItem> *histList)
 	endInsertRows();
 }
 
+int HistoryModel::getAsksCount()
+{
+    int asksCount = 0;
+    for (int i = 0; i<itemsList.count(); i++) {
+        if (itemsList.at(i).type) {
+            asksCount++;
+        }
+    }
+    return asksCount;
+}
+
 double HistoryModel::getRowPrice(int row)
 {
 	row=itemsList.count()-row-1;

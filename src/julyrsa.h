@@ -37,6 +37,7 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <QtZlib/zlib.h>
 
 class JulyRSA : public QObject
 {

@@ -5,8 +5,15 @@ TEMPLATE	= app
 LANGUAGE        = C++
 DEPENDPATH 	+= .
 INCLUDEPATH 	+= .
-INCLUDEPATH += $$[QT_INSTALL_PREFIX]/src/3rdparty/zlib
 
+win32 {
+  message( "Compiling using included zlib headers" )
+  INCLUDEPATH += ../../3rdParty/QtZlib
+  greaterThan( QT_MAJOR_VERSION, 4 ) {
+    message( "Compiling using Z_PREFIX (Qt5 mode)" )
+    DEFINES += Z_PREFIX
+  }
+}
 
 CONFIG	+= qt release
 
@@ -39,7 +46,7 @@ CONFIG(static) {
   }
 }
 
- win32 { LIBS += -lcrypt32 -llibeay32 -lssleay32 -luser32 -lgdi32 -ladvapi32 -lzlib }
+ win32 { LIBS += -lcrypt32 -llibeay32 -lssleay32 -luser32 -lgdi32 -ladvapi32 -lws2_32 -lwinmm}
 !win32 { LIBS += -lcrypto -lz }
 
 mac{

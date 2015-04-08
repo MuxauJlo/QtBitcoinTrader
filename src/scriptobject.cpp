@@ -99,6 +99,16 @@ ScriptObject::ScriptObject(QString _scriptName) :
     functionsList<<"trader.get(\"OpenOrdersCount\")";
     functionsList<<"trader.get(\"OpenAsksCount\")";
     functionsList<<"trader.get(\"OpenBidsCount\")";
+    functionsList<<"trader.get(\"OpenOrderType\",item)";
+    functionsList<<"trader.get(\"OpenOrderPrice\",item)";
+    functionsList<<"trader.get(\"OpenOrderVolume\",item)";
+
+    functionsList<<"trader.get(\"HistoryOrdersCount\")";
+    functionsList<<"trader.get(\"HistoryAsksCount\")";
+    functionsList<<"trader.get(\"HistoryBidsCount\")";
+    functionsList<<"trader.get(\"HistoryOrderType\",item)";
+    functionsList<<"trader.get(\"HistoryOrderPrice\",item)";
+    functionsList<<"trader.get(\"HistoryOrderVolume\",item)";
 
     indicatorList.removeDuplicates();
     functionsList.removeDuplicates();
@@ -126,6 +136,11 @@ void ScriptObject::sendEvent(QString symbol, QString name, double value)
     emit eventSignal(symbol,name,value);
 }
 
+int ScriptObject::getOpenOrdersCount()
+{
+    return mainWindow.getOpenOrdersCount(0);
+}
+
 int ScriptObject::getOpenAsksCount()
 {
     return mainWindow.getOpenOrdersCount(-1);
@@ -136,25 +151,90 @@ int ScriptObject::getOpenBidsCount()
     return mainWindow.getOpenOrdersCount(1);
 }
 
-int ScriptObject::getOpenOrdersCount()
+int ScriptObject::getOpenOrderType(int item)
 {
-    return mainWindow.getOpenOrdersCount(0);
+    return mainWindow.getOpenOrderType(item);
 }
+
+int ScriptObject::getOpenOrderPrice(int item)
+{
+    return mainWindow.getOpenOrderPrice(item);
+}
+
+int ScriptObject::getOpenOrderVolume(int item)
+{
+    return mainWindow.getOpenOrderVolume(item);
+}
+
+int ScriptObject::getHistoryOrdersCount()
+{
+    return mainWindow.getHistoryOrdersCount(0);
+}
+
+int ScriptObject::getHistoryAsksCount()
+{
+    return mainWindow.getHistoryOrdersCount(-1);
+}
+
+int ScriptObject::getHistoryBidsCount()
+{
+    return mainWindow.getHistoryOrdersCount(1);
+}
+
+int ScriptObject::getHistoryOrderType(int item)
+{
+    return mainWindow.getHistoryOrderType(item);
+}
+
+int ScriptObject::getHistoryOrderPrice(int item)
+{
+    return mainWindow.getHistoryOrderPrice(item);
+}
+
+int ScriptObject::getHistoryOrderVolume(int item)
+{
+    return mainWindow.getHistoryOrderVolume(item);
+}
+
 
 void ScriptObject::test(int val)
 {
     testResult=val;
 }
 
-double ScriptObject::getAsksVolByPrice(double volume){return getAsksVolByPrice(baseValues.currentPair.symbolSecond(),volume);}
-double ScriptObject::getAsksPriceByVol(double price){return getAsksPriceByVol(baseValues.currentPair.symbolSecond(),price);}
-double ScriptObject::getBidsVolByPrice(double volume){return getBidsVolByPrice(baseValues.currentPair.symbolSecond(),volume);}
-double ScriptObject::getBidsPriceByVol(double price){return getBidsPriceByVol(baseValues.currentPair.symbolSecond(),price);}
+double ScriptObject::getAsksVolByPrice(double volume)
+{
+    return getAsksVolByPrice(baseValues.currentPair.symbolSecond(),volume);
+}
+double ScriptObject::getAsksPriceByVol(double price)
+{
+    return getAsksPriceByVol(baseValues.currentPair.symbolSecond(),price);
+}
+double ScriptObject::getBidsVolByPrice(double volume)
+{
+    return getBidsVolByPrice(baseValues.currentPair.symbolSecond(),volume);
+}
+double ScriptObject::getBidsPriceByVol(double price)
+{
+    return getBidsPriceByVol(baseValues.currentPair.symbolSecond(),price);
+}
 
-double ScriptObject::getAsksPriceByVol(QString symbol, double price){return orderBookInfo(symbol,price,true,true);}
-double ScriptObject::getAsksVolByPrice(QString symbol, double volume){return orderBookInfo(symbol,volume,true,false);}
-double ScriptObject::getBidsPriceByVol(QString symbol, double price){return orderBookInfo(symbol,price,false,true);}
-double ScriptObject::getBidsVolByPrice(QString symbol, double volume){return orderBookInfo(symbol,volume,false,false);}
+double ScriptObject::getAsksPriceByVol(QString symbol, double price)
+{
+    return orderBookInfo(symbol,price,true,true);
+}
+double ScriptObject::getAsksVolByPrice(QString symbol, double volume)
+{
+    return orderBookInfo(symbol,volume,true,false);
+}
+double ScriptObject::getBidsPriceByVol(QString symbol, double price)
+{
+    return orderBookInfo(symbol,price,false,true);
+}
+double ScriptObject::getBidsVolByPrice(QString symbol, double volume)
+{
+    return orderBookInfo(symbol,volume,false,false);
+}
 
 
 double ScriptObject::orderBookInfo(QString &symbol,double &value, bool isAsk, bool getPrice)
@@ -222,6 +302,11 @@ double ScriptObject::get(QString symbol, QString indicator)
     if(indicatorLower==QLatin1String("openorderscount"))return getOpenOrdersCount();
     if(indicatorLower==QLatin1String("openaskscount"))return getOpenAsksCount();
     if(indicatorLower==QLatin1String("openbidscount"))return getOpenBidsCount();
+
+    if(indicatorLower==QLatin1String("historyorderscount"))return getHistoryOrdersCount();
+    if(indicatorLower==QLatin1String("historyaskscount"))return getHistoryAsksCount();
+    if(indicatorLower==QLatin1String("historybidscount"))return getHistoryBidsCount();
+
 
     if(indicator.length()>=8&&indicatorLower.startsWith(QLatin1String("balance")))symbol.clear();
     else if(!symbol.isEmpty())symbol.append("_");
@@ -661,6 +746,20 @@ QString ScriptObject::sourceToScript(QString text)
     text.replace("trader.get('AsksVolume',","trader.getAsksVolByPrice(",Qt::CaseInsensitive);
     text.replace("trader.get('BidsPrice',","trader.getBidsPriceByVol(",Qt::CaseInsensitive);
     text.replace("trader.get('BidsVolume',","trader.getBidsVolByPrice(",Qt::CaseInsensitive);
+
+    text.replace("trader.get(\"OpenOrderType\",","trader.getOpenOrderType(",Qt::CaseInsensitive);
+    text.replace("trader.get('OpenOrderType',","trader.getOpenOrderType(",Qt::CaseInsensitive);
+    text.replace("trader.get(\"OpenOrderPrice\",","trader.getOpenOrderPrice(",Qt::CaseInsensitive);
+    text.replace("trader.get('OpenOrderPrice',","trader.getOpenOrderPrice(",Qt::CaseInsensitive);
+    text.replace("trader.get(\"OpenOrderVolume\",","trader.getOpenOrderVolume(",Qt::CaseInsensitive);
+    text.replace("trader.get('OpenOrderVolume',","trader.getOpenOrderVolume(",Qt::CaseInsensitive);
+
+    text.replace("trader.get(\"HistoryOrderType\",","trader.getHistoryOrderType(",Qt::CaseInsensitive);
+    text.replace("trader.get('HistoryOrderType',","trader.getHistoryOrderType(",Qt::CaseInsensitive);
+    text.replace("trader.get(\"HistoryOrderPrice\",","trader.getHistoryOrderPrice(",Qt::CaseInsensitive);
+    text.replace("trader.get('HistoryOrderPrice',","trader.getHistoryOrderPrice(",Qt::CaseInsensitive);
+    text.replace("trader.get(\"HistoryOrderVolume\",","trader.getHistoryOrderVolume(",Qt::CaseInsensitive);
+    text.replace("trader.get('HistoryOrderVolume',","trader.getHistoryOrderVolume(",Qt::CaseInsensitive);
 
     return text;
 }

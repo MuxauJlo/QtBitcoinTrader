@@ -41,7 +41,10 @@ class HistoryModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	HistoryModel();
+
+    int getAsksCount();
+
+    HistoryModel();
 	~HistoryModel();
     double getRowPrice(int);
     double getRowVolume(int);

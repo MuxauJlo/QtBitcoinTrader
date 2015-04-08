@@ -33,6 +33,7 @@
 #define JULYAES256_H
 
 #include <QByteArray>
+#include <QtZlib/zlib.h>
 
 class JulyAES256
 {

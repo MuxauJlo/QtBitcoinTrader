@@ -36,6 +36,7 @@
 #include <QSslSocket>
 #include <QTime>
 #include <QNetworkCookie>
+#include <QtZlib/zlib.h>
 
 struct PacketItem
 {
