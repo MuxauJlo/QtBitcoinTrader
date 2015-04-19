@@ -224,6 +224,12 @@ QString RuleScriptParser::holderToScript(RuleHolder &holder, bool testMode)
                 script+=" trader.say(\""+holder.thanText+"\""+sayText+");\n";
                 }
                 break;
+            case 13: //Cancel Ask !!! Тарасов!! Закрыть ордер на продажу!!!
+                script+=" trader.cancelAsk();\n";
+                break;
+            case 14: //Cancel Bids !!! Тарасов!! Закрыть ордер на покупку!!!
+                script+=" trader.cancelBid();\n";
+                break;
             }
         }
         script+=" trader.groupDone();\n";

@@ -58,6 +58,8 @@ public:
     void ordersCancelAll(QString pair=0);
     void ordersCancelBids(QString pair=0);
     void ordersCancelAsks(QString pair=0);
+    void ordersCancelAsk(QString pair=0, double amount=0, double price=0);
+    void ordersCancelBid(QString pair=0, double amount=0, double price=0);
 	void setOrderCanceled(QByteArray);
 
 	void clear();

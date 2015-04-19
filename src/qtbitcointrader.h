@@ -56,7 +56,6 @@
 #include "networkmenu.h"
 #include <time.h>
 #include <QElapsedTimer>
-#include <QtZlib/zlib.h>
 
 class Exchange;
 
@@ -274,6 +273,8 @@ public slots:
     void cancelPairOrders(QString);
     void cancelAskOrders(QString);
     void cancelBidOrders(QString);
+    void cancelAskOrder(QString symbol, double amount, double price);
+    void cancelBidOrder(QString symbol, double amount, double price);
 
 	void repeatBuySellOrder();
 	void repeatBuyOrder();

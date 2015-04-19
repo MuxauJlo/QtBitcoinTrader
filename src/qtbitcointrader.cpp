@@ -2223,6 +2223,17 @@ void QtBitcoinTrader::cancelAskOrders(QString symbol)
     ordersModel->ordersCancelAsks(symbol);
 }
 
+void QtBitcoinTrader::cancelAskOrder(QString symbol, double amount, double price)
+{
+    ordersModel->ordersCancelAsk(symbol, amount, price);
+}
+
+void QtBitcoinTrader::cancelBidOrder(QString symbol, double amount, double price)
+{
+    ordersModel->ordersCancelBid(symbol, amount, price);
+}
+
+
 void QtBitcoinTrader::cancelBidOrders(QString symbol)
 {
     ordersModel->ordersCancelBids(symbol);

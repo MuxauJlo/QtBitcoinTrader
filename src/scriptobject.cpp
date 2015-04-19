@@ -500,11 +500,48 @@ void ScriptObject::cancelAsks(QString symbol)
     if(!testMode)mainWindow.cancelAskOrders(symbol);
 }
 
+void ScriptObject::cancelAsk()
+{
+    log("Cancel no asks");
+    if(!testMode)mainWindow.cancelAskOrder("",0,0);
+}
+
+void ScriptObject::cancelAsk(double amount, double price)
+{
+    log("Cancel ask, amount = "+QString::number(amount)+" and price = "+QString::number(price));
+    if(!testMode)mainWindow.cancelAskOrder("", amount, price);
+}
+
+void ScriptObject::cancelAsk(QString symbol, double amount, double price)
+{
+    log("Cancel "+symbol+" ask, amount = "+amount+" and price = "+price);
+    if(!testMode)mainWindow.cancelAskOrder(symbol, amount, price);
+}
+
 void ScriptObject::cancelBids(QString symbol)
 {
     log("Cancel all "+symbol+" bids");
     if(!testMode)mainWindow.cancelBidOrders(symbol);
 }
+
+void ScriptObject::cancelBid()
+{
+    log("Cancel no bids");
+    if(!testMode)mainWindow.cancelBidOrder("",0,0);
+}
+
+void ScriptObject::cancelBid(double amount, double price)
+{
+    log("Cancel bid, amount = "+QString::number(amount)+" and price = "+QString::number(price));
+    if(!testMode)mainWindow.cancelBidOrder("", amount, price);
+}
+
+void ScriptObject::cancelBid(QString symbol, double amount, double price)
+{
+    log("Cancel "+symbol+" ask, amount = "+amount+" and price = "+price);
+    if(!testMode)mainWindow.cancelBidOrder(symbol, amount, price);
+}
+
 
 void ScriptObject::logClear()
 {

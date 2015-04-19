@@ -1,0 +1,7 @@
+[JLScript]
+Version=1
+Name=\x41f\x440\x43e\x432\x435\x440\x43a\x430 \x43a\x43e\x43c\x438\x441\x441\x438\x438
+Notes=
+Encrypted=false
+LogRowsCount=20
+Data="//trader.cancelBid(\"LTCUSD\",0.23444440,1.200001);\n\ntrader.cancelBid(0.23444440,1.200001);\n\n//trader.log(trader.get(\"OpenOrdersCount\"));\n//trader.cancelAsk(\"LTCUSD\",\"\x141\x30.1\",\"$1.5\");\n\n//trader.cancelAsks(\"LTCUSD\");\n\n//trader.cancelAsks();"

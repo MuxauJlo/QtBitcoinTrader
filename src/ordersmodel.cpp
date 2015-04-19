@@ -439,6 +439,26 @@ void OrdersModel::ordersCancelAsks(QString pair)
             emit cancelOrder(pair,oidList.at(n));
 }
 
+// тарасов. пробуем сделать команду отмены 1 ордера на продажу.
+void OrdersModel::ordersCancelAsk(QString pair, double amount, double price)
+{
+    for(int n=oidList.count()-1;n>=0;n--)
+        if(statusList.at(n)&&typesList.at(n)==true&&(pair.isEmpty()||symbolList.at(n)==pair)&&qFuzzyCompare(amountList.at(n),amount)&&qFuzzyCompare(priceList.at(n),price)) {
+            emit cancelOrder(pair,oidList.at(n));
+            break;
+        }
+}
+
+// тарасов. пробуем сделать команду отмены 1 ордера на покупку.
+void OrdersModel::ordersCancelBid(QString pair, double amount, double price)
+{
+    for(int n=oidList.count()-1;n>=0;n--)
+        if(statusList.at(n)&&typesList.at(n)==false&&(pair.isEmpty()||symbolList.at(n)==pair)&&qFuzzyCompare(amountList.at(n),amount)&&qFuzzyCompare(priceList.at(n),price)) {
+            emit cancelOrder(pair,oidList.at(n));
+            break;
+        }
+}
+
 void OrdersModel::setOrderCanceled(QByteArray oid)
 {
 	for(int n=0;n<oidList.count();n++)
@@ -524,7 +544,7 @@ QModelIndex OrdersModel::parent(const QModelIndex &) const
 int OrdersModel::getRowNum(int row){if(row<0||row>=oidList.count())return 0; return oidList.count()-row-1;}
 quint32 OrdersModel::getRowDate(int row){if(row<0||row>=dateList.count())return 0; return dateList.at(getRowNum(row));}
 QByteArray OrdersModel::getRowOid(int row){if(row<0||row>=oidList.count())return 0; return oidList.at(getRowNum(row));}
-int OrdersModel::getRowType(int row){if(row<0||row>=typesList.count())return 0; return typesList.at(getRowNum(row))?1:0;}
+int OrdersModel::getRowType(int row){if(row<0||row>=typesList.count())return 0; return typesList.at(getRowNum(row))? 1:0;}
 int OrdersModel::getRowStatus(int row){if(row<0||row>=statusList.count())return 0; return statusList.at(getRowNum(row));}
 double OrdersModel::getRowPrice(int row){if(row<0||row>=priceList.count())return 0.0;return priceList.at(getRowNum(row));}
 double OrdersModel::getRowVolume(int row){if(row<0||row>=amountList.count())return 0.0;return amountList.at(getRowNum(row));}

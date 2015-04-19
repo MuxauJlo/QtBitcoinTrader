@@ -131,6 +131,12 @@ public slots:
     void cancelBids(QString symbol);
     void cancelAsks();
     void cancelBids();
+    void cancelAsk(double amount, double price);
+    void cancelAsk(QString symbol, double amount, double price);
+    void cancelAsk();
+    void cancelBid(double amount, double price);
+    void cancelBid(QString symbol, double amount, double price);
+    void cancelBid();
 
     int getOpenAsksCount();
     int getOpenBidsCount();
