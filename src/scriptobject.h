@@ -142,8 +142,10 @@ public slots:
     int getOpenBidsCount();
     int getOpenOrdersCount();
     int getOpenOrderType(int item);
-    int getOpenOrderPrice(int item);
-    int getOpenOrderVolume(int item);
+    double getOpenOrderPrice(int item);
+    double getOpenOrderVolume(int item);
+    QString getOpenOrderSymbol(int item);
+
 
     int getHistoryAsksCount();
     int getHistoryBidsCount();
@@ -151,6 +153,9 @@ public slots:
     int getHistoryOrderType(int item);
     int getHistoryOrderPrice(int item);
     int getHistoryOrderVolume(int item);
+
+    double getfirstcurr();
+    double getsecondcurr();
 
     double getAsksVolByPrice(double price);
     double getAsksPriceByVol(double volume);
@@ -165,6 +170,19 @@ public slots:
     quint32 getTimeT();
     double get(QString indicator);
     double get(QString symbol, QString indicator);
+
+    void CreateDirectory(QString name);
+    bool existDirectory(QString name);
+    void CreateFile(QString name);
+    bool existFile(QString name);
+    void clearFile(QString name);
+    void appendFile(QString name, QString value);
+    void insertFile(QString name, QString value,int number);
+    double countLineFile(QString name);
+    double countCharFile(QString name);
+    QString readFile(QString name, int position,int amount);
+    QString readLnFile(QString name, int position);
+
 private slots:
     void initValueChanged(QString symbol, QString name, double val);
     void timerOut();

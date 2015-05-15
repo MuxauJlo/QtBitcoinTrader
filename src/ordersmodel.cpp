@@ -549,3 +549,4 @@ int OrdersModel::getRowStatus(int row){if(row<0||row>=statusList.count())return 
 double OrdersModel::getRowPrice(int row){if(row<0||row>=priceList.count())return 0.0;return priceList.at(getRowNum(row));}
 double OrdersModel::getRowVolume(int row){if(row<0||row>=amountList.count())return 0.0;return amountList.at(getRowNum(row));}
 double OrdersModel::getRowTotal(int row){if(row<0||row>=statusList.count())return 0; return statusList.at(getRowNum(row));}
+QString OrdersModel::getRowSymbol(int row){if(row<0||row>=symbolList.count())return 0; return symbolList.at(getRowNum(row));}

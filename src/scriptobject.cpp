@@ -40,6 +40,7 @@
 #include <QMetaMethod>
 #include <QDoubleSpinBox>
 #include <QScriptEngine>
+#include <QDir>
 
 ScriptObject::ScriptObject(QString _scriptName) :
     QObject()
@@ -88,6 +89,7 @@ ScriptObject::ScriptObject(QString _scriptName) :
     indicatorList<<"trader.on(\"OpenOrdersCount\").changed";
     indicatorList<<"trader.on(\"OpenAsksCount\").changed";
     indicatorList<<"trader.on(\"OpenBidsCount\").changed";
+    indicatorList<<"trader.on(\"ScriptClose\").changed";
 
     functionsList<<"trader.get(\"Time\")";
 
@@ -102,6 +104,7 @@ ScriptObject::ScriptObject(QString _scriptName) :
     functionsList<<"trader.get(\"OpenOrderType\",item)";
     functionsList<<"trader.get(\"OpenOrderPrice\",item)";
     functionsList<<"trader.get(\"OpenOrderVolume\",item)";
+    functionsList<<"trader.get(\"OpenOrderSymbol\",item)";
 
     functionsList<<"trader.get(\"HistoryOrdersCount\")";
     functionsList<<"trader.get(\"HistoryAsksCount\")";
@@ -109,6 +112,9 @@ ScriptObject::ScriptObject(QString _scriptName) :
     functionsList<<"trader.get(\"HistoryOrderType\",item)";
     functionsList<<"trader.get(\"HistoryOrderPrice\",item)";
     functionsList<<"trader.get(\"HistoryOrderVolume\",item)";
+
+    functionsList<<"trader.get(\"Balance\",\"FirstCurr\")";
+    functionsList<<"trader.get(\"Balance\",\"SecondCurr\")";
 
     indicatorList.removeDuplicates();
     functionsList.removeDuplicates();
@@ -156,14 +162,19 @@ int ScriptObject::getOpenOrderType(int item)
     return mainWindow.getOpenOrderType(item);
 }
 
-int ScriptObject::getOpenOrderPrice(int item)
+double ScriptObject::getOpenOrderPrice(int item)
 {
     return mainWindow.getOpenOrderPrice(item);
 }
 
-int ScriptObject::getOpenOrderVolume(int item)
+double ScriptObject::getOpenOrderVolume(int item)
 {
     return mainWindow.getOpenOrderVolume(item);
+}
+
+QString ScriptObject::getOpenOrderSymbol(int item)
+{
+    return mainWindow.getOpenOrderSymbol(item);
 }
 
 int ScriptObject::getHistoryOrdersCount()
@@ -601,9 +612,17 @@ void ScriptObject::initValueChangedPrivate(QString &symbol, QString &scriptNameI
     if(!forceEmit&&!testMode&&indicatorsMap.value(prependName+scriptNameInd,-2508.1987)==val)return;
 
     indicatorsMap[prependName+scriptNameInd]=val;
-    if(engine==0)return;
+    if(engine==0) {
+        if (scriptNameInd != QLatin1String("ScriptClose")) {
+            if(!forceEmit&&!testMode&&indicatorsMap.value(prependName+scriptNameInd,-2508.1987)==val)
+                return;
+        }
+    }
+
     if(val<0.00000001&&scriptNameInd.contains(QLatin1String("price"),Qt::CaseInsensitive))return;
     emit valueChanged(symbol,scriptNameInd,val);
+
+
 }
 
 void ScriptObject::initValueChanged(QString symbol, QString scriptNameInd, double val)
@@ -764,6 +783,11 @@ QString ScriptObject::sourceToScript(QString text)
 	text.replace("\\","\\\\");
     text.replace(", \"",",\"");
 
+    text.replace("trader.get(\"Balance\",\"FirstCurr\")","trader.getfirstcurr()",Qt::CaseInsensitive);
+    text.replace("trader.get(\"Balance\",\"SecondCurr\")","trader.getsecondcurr()",Qt::CaseInsensitive);
+    text.replace("trader.get('Balance','FirstCurr')","trader.getfirstcurr()",Qt::CaseInsensitive);
+    text.replace("trader.get('Balance','SecondCurr')","trader.getsecondcurr()",Qt::CaseInsensitive);
+
     text.replace("trader.get(\"Balance\",\"","trader.get(\"Balance",Qt::CaseInsensitive);
     text.replace("trader.on(\"Balance\",\"","trader.on(\"Balance",Qt::CaseInsensitive);
 
@@ -790,6 +814,8 @@ QString ScriptObject::sourceToScript(QString text)
     text.replace("trader.get('OpenOrderPrice',","trader.getOpenOrderPrice(",Qt::CaseInsensitive);
     text.replace("trader.get(\"OpenOrderVolume\",","trader.getOpenOrderVolume(",Qt::CaseInsensitive);
     text.replace("trader.get('OpenOrderVolume',","trader.getOpenOrderVolume(",Qt::CaseInsensitive);
+    text.replace("trader.get(\"OpenOrderSymbol\",","trader.getOpenOrderSymbol(",Qt::CaseInsensitive);
+    text.replace("trader.get('OpenOrderSymbol',","trader.getOpenOrderSymbol(",Qt::CaseInsensitive);
 
     text.replace("trader.get(\"HistoryOrderType\",","trader.getHistoryOrderType(",Qt::CaseInsensitive);
     text.replace("trader.get('HistoryOrderType',","trader.getHistoryOrderType(",Qt::CaseInsensitive);
@@ -842,3 +868,155 @@ bool ScriptObject::replaceString(QString what, QString to, QString &text, bool s
     text.insert(indexOf_what,to);
     return true;
 }
+
+double ScriptObject::getfirstcurr()
+{
+return mainWindow.getfirstcurr();
+}
+
+double ScriptObject::getsecondcurr()
+{
+return mainWindow.getsecondcurr();
+}
+
+void ScriptObject::CreateDirectory(QString name) {
+if(testMode)return;
+QDir().mkdir(name);
+}
+
+bool ScriptObject::existDirectory(QString name) {
+// if(testMode)return ;
+return QDir(name).exists();
+}
+
+void ScriptObject::CreateFile(QString name) {
+if(testMode)return;
+QFile file(name);
+if (file.exists()) {
+
+}
+else {
+file.open(QIODevice::WriteOnly);
+file.close();
+}
+}
+
+bool ScriptObject::existFile(QString name) {
+//if(testMode)return;
+return QFile(name).exists();
+}
+
+void ScriptObject::clearFile(QString name) {
+if(testMode)return;
+QFile file(name);
+file.open(QIODevice::WriteOnly);
+file.close();
+}
+
+void ScriptObject::appendFile(QString name, QString value)
+{ if(testMode)return;
+QFile file(name);
+//file.open(QIODevice::ReadWrite);
+QString result = "";
+result.clear();
+// while(!file.atEnd())
+// {
+// //читаем строку
+// QString str = file.readLine();
+// result.append(str);
+//}
+//file.close();
+QTextStream out(&file);
+
+result.append(value);
+result = result + "\n";
+file.open(QIODevice::Append);
+out << result;
+file.close();
+}
+
+void ScriptObject::insertFile(QString name, QString value,int number)
+{
+if(testMode)return;
+QFile file(name);
+file.open(QIODevice::ReadOnly);
+QString result = "";
+result.clear();
+value.append("\n");
+int i = 0;
+bool p = false;
+while(!file.atEnd())
+{
+//читаем строку
+QString str = file.readLine();
+if (i == number) {
+result.append(value);
+p = true;
+}
+result.append(str);
+i++;
+}
+if (p == false) {
+result.append(value);
+}
+file.close();
+file.open(QIODevice::WriteOnly);
+file.close();
+file.open(QIODevice::WriteOnly);
+QTextStream out(&file);
+out << result;
+file.close();
+
+}
+
+double ScriptObject::countLineFile(QString name) {
+if(testMode)return 0;
+QFile file(name);
+file.open(QIODevice::ReadOnly);
+int i = 0;
+while(!file.atEnd())
+{
+//читаем строку
+QString str = file.readLine();
+i++;
+}
+return i;
+
+}
+
+double ScriptObject::countCharFile(QString name) {
+if(testMode)return 0;
+QFile file(name);
+file.open(QIODevice::ReadOnly);
+QTextStream in(&file);
+QString wholeFile = in.readAll();
+return wholeFile.length();
+}
+
+QString ScriptObject::readFile(QString name, int position,int amount){
+if(testMode)return 0;
+QFile file(name);
+file.open(QIODevice::ReadOnly);
+QTextStream in(&file);
+QString wholeFile = in.readAll();
+return wholeFile.mid(position,amount);
+}
+
+QString ScriptObject::readLnFile(QString name, int position){
+if(testMode)return 0;
+QFile file(name);
+file.open(QIODevice::ReadOnly);
+int i = 0;
+while(!file.atEnd())
+{
+//читаем строку
+QString str = file.readLine();
+
+if (position == i) {
+return str;
+}
+i++;
+}
+return 0;
+}
+

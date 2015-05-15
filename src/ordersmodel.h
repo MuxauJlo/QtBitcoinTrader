@@ -50,6 +50,7 @@ public:
     double getRowPrice(int row);
     double getRowVolume(int row);
     double getRowTotal(int row);
+    QString getRowSymbol(int row);
 
     QMap<double,bool> currentAsksPrices;
     QMap<double,bool> currentBidsPrices;

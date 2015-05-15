@@ -828,13 +828,19 @@ int QtBitcoinTrader::getOpenOrderType(int item)//-1: asks, 0 all, 1: bids
     return ordersModel->getRowType(item);
 }
 
-int QtBitcoinTrader::getOpenOrderPrice(int item)
+double QtBitcoinTrader::getOpenOrderPrice(int item)
 {
     return ordersModel->getRowPrice(item);
 }
-int QtBitcoinTrader::getOpenOrderVolume(int item)
+
+double QtBitcoinTrader::getOpenOrderVolume(int item)
 {
     return ordersModel->getRowVolume(item);
+}
+
+QString QtBitcoinTrader::getOpenOrderSymbol(int item)
+{
+    return ordersModel->getRowSymbol(item);
 }
 
 int QtBitcoinTrader::getHistoryOrdersCount(int all)//-1: asks, 0 all, 1: bids
@@ -3521,4 +3527,15 @@ void QtBitcoinTrader::on_helpButton_clicked()
         if(qobject_cast<ScriptWidget *>(ui.rulesTabs->currentWidget()))helpType="JLScript";
     }
     QDesktopServices::openUrl(QUrl("https://qbtapi.centrabit.com/?Object=Help&Method="+helpType+"&Locale="+QLocale().name()));
+}
+
+double QtBitcoinTrader::getfirstcurr()
+{
+return ui.accountBTC->value();
+
+}
+
+double QtBitcoinTrader::getsecondcurr()
+{
+return ui.accountUSD->value();
 }

@@ -86,13 +86,17 @@ public:
     QStringList getScriptGroupsNames();
     int getOpenOrdersCount(int all=0);
     int getOpenOrderType(int item);
-    int getOpenOrderPrice(int item);
-    int getOpenOrderVolume(int item);
+    double getOpenOrderPrice(int item);
+    double getOpenOrderVolume(int item);
+    QString getOpenOrderSymbol(int item);
 
     int getHistoryOrdersCount(int all=0);
     int getHistoryOrderType(int item);
     int getHistoryOrderPrice(int item);
     int getHistoryOrderVolume(int item);
+
+    double getfirstcurr();
+    double getsecondcurr();
 
 	void fixTableViews(QWidget *wid);
     double getIndicatorValue(QString);

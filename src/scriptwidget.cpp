@@ -407,7 +407,11 @@ void ScriptWidget::setRunning(bool on)
 
 void ScriptWidget::on_buttonStartStop_clicked()
 {
-    if(scriptObject->stopScript())return;
+    if(scriptObject->stopScript()){
+        mainWindow.sendIndicatorEvent("","ScriptClose",0);
+        return;
+    }
+
     if(!executeScript(true))return;
     executeScript(false);
 }
